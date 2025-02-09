@@ -26,12 +26,15 @@ public class AuthService {
 		
         Optional<Persona> user = PersonaDAO.validarCredenciales(persona.getEmail(), persona.getPassword());
         if (user.isPresent()) {
-            String token = JwtUtil.generateToken(user.get().getEmail(), user.get().isRol());
+            String token = JwtUtil.generateToken(user.get().getEmail(), user.get().getRol(),user.get().getId());
             return Response.ok(new AuthResponse(token)).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Credenciales incorrectas").build();
         }
     }
+	
+	
+	
 	class AuthResponse {
 	    private String token;
 

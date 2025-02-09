@@ -18,7 +18,7 @@ import ups.edu.ec.demo65.Espacio;
 import ups.edu.ec.demo65.Horario;
 import ups.edu.ec.demo65.Persona;
 import ups.edu.ec.demo65.Tarifa;
-import ups.edu.ec.demo65.Telefono;
+
 
 @Singleton
 @Startup
@@ -54,9 +54,6 @@ public class Inicio {
 			System.out.println(horario);
 		} 
 		
-		Telefono f2 = new Telefono();
-		f2.setNumero("0123456789");
-		f2.setTipo("Fijo");
 		
 		
 		Persona per = new Persona();

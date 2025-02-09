@@ -54,24 +54,7 @@ public class Persona {
 	@Column(name="rol")
     private boolean rol;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name="cedula_cliente")
-    private List<Telefono> telefonos;
     
-    public void addTelefono(Telefono telefono) {
-    	if(this.telefonos == null) {
-    		this.telefonos =  new ArrayList<Telefono>();
-    	}
-    	this.telefonos.add(telefono);
-    }
-    
-    
-    public List<Telefono> getTelefonos(){
-    	return this.telefonos;
-    }
-    public void setTelefonos(List<Telefono> telefonos){
-    	this.telefonos= telefonos;
-    }
     
     public List<Contrato> getListaContratos(){
     	return this.listaContratos;
@@ -128,7 +111,7 @@ public class Persona {
         this.direccion = direccion;
     }
 
-    public boolean isRol() {
+    public boolean getRol() {
         return rol;
     }
 
@@ -171,7 +154,7 @@ public class Persona {
 	public String toString() {
 		return "Persona [id=" + id + ", listaContratos=" + listaContratos + ", correo=" + email + ", password="
 				+ password + ", cedula=" + cedula + ", nombre=" + nombre + ", apellido=" + apellido + ", telefono="
-				+ telefono + ", direccion=" + direccion + ", rol=" + rol + ", telefonos=" + telefonos + "]";
+				+ telefono + ", direccion=" + direccion + ", rol=" + rol + "]";
 	}
 
     

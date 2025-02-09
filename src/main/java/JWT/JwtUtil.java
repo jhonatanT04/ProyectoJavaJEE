@@ -20,10 +20,10 @@ public class JwtUtil {
 	 private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 	 
 	 
-	 public static String generateToken(String email, boolean rol) {
+	 public static String generateToken(String email, boolean rol,int id) {
 	        return Jwts.builder()
+	        		.claim("id", id)
 	                .setSubject(email)
-	                //? "ADMIN" : "USER"
 	                .claim("rol", rol ) 
 	                .setIssuedAt(new Date())
 	                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

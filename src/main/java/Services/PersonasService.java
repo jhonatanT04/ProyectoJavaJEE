@@ -144,8 +144,6 @@ public class PersonasService {
             }
 
             Integer id = claims.get("id", Integer.class);
-            
-
             String emailFromToken = claims.getSubject();  
             if (!emailFromToken.equals(email)) {
                 return Response.status(Response.Status.FORBIDDEN).entity("Acceso denegado").build();
@@ -197,7 +195,7 @@ public class PersonasService {
                 String emailFromToken = claims.getSubject();  
                 
                 
-                System.out.println("Persona "+id+" email "+emailFromToken );
+                //System.out.println("Persona "+id+" email "+emailFromToken );
                 
                 Persona persona = gPersonas.buscarPersona(id);
                 if (persona == null) {
@@ -213,4 +211,50 @@ public class PersonasService {
                         .build();
             }
     }
+        @PUT
+        @Path("/actualizarPerfil")
+        @Produces("application/json")
+        @Consumes(MediaType.APPLICATION_JSON)
+        public Response updateProfile(@HeaderParam("Authorization") String authHeader,Persona persona) {
+            try {
+            	
+            	if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                    return Response.status(Response.Status.UNAUTHORIZED).entity("Token no proporcionado").build();
+                }
+                String token = authHeader.substring("Bearer".length()).trim();
+                String secretKey = System.getenv("JWT_SECRET_KEY"); 
+                Claims claims;
+                try {
+                    claims = Jwts.parser()
+                    		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody();
+                } catch (ExpiredJwtException e) {
+                    return Response.status(Response.Status.UNAUTHORIZED).entity("Token expirado").build();
+                } catch (Exception e) {
+                    return Response.status(Response.Status.UNAUTHORIZED).entity("Error al validar el token").build();
+                }
+                
+                Integer id = claims.get("id", Integer.class);
+                
+                String emailFromToken = claims.getSubject();  
+                
+            	persona.setEmail(emailFromToken);
+            	if(id!= persona.getId()|| id == null) {
+            		return Response.status(Response.Status.FORBIDDEN).entity("Acceso denegado").build();
+            	}
+            	
+            	
+                if (emailFromToken == persona.getEmail() && id == persona.getId() &&persona != null && persona.getCedula() != null) {
+                    gPersonas.actualizarPersona(persona);
+                    return Response.ok(new Respuesta(Respuesta.OK, "Persona actualizada con éxito")).build();
+                } else {
+                    return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Datos inválidos para la actualización de perfil")).build();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al actualizar la persona")).build();
+            }
+        }
 }
